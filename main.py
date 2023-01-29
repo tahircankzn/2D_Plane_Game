@@ -25,18 +25,24 @@ MISSION_SHIP = pygame.image.load("mission_ship.png")
 
 #rocket
 MISSION_SHIP_ROCKET = pygame.image.load("blue_rocket1.png")
-
+#SUPERMAN
+SUPERMAN = pygame.image.load("superman.png")
 #düşman aracı
 ENEMY_SHİP = pygame.image.load("enemy_ship_blue.png")
 
 # ses buton resmi , şimdilik çalışmıyor
 SOUND = pygame.image.load("sound.png")
 
+exit = 1
 
+class exits():
+    def __init__(self,exit):
+        self.exit = exit
 
+bitir = exits(1)
 
 # başlangıç ekranı 
-def start():
+def start(exit):
     x =-300 
     y = 100
 
@@ -97,6 +103,11 @@ def start():
                         if mouse_y > 250 and mouse_y < 320:
                             run1 =False
                             boom()
+                if event.type == pygame.QUIT:
+                    run1 = False
+                    bitir.exit = 0
+
+        
     
 
 
@@ -162,10 +173,18 @@ class Player_Rocket():
     def draw(self,window):
         window.blit(self.ship_image,(self.x,self.y))
     def move(self):
-        self.x +=5
+        self.x +=10
 
 
-
+class SUPERMAN_CLASS():
+    def __init__(self,x,y):
+        self.x = x
+        self.y = y
+        self.image = SUPERMAN
+    def draw(self,window):
+        window.blit(self.image,(self.x,self.y))
+    def move(self):
+        self.x += 5
 
 # çarpışma
 def colide(object1,object2): 
@@ -179,6 +198,16 @@ def colide(object1,object2):
 
     return object1.mask.overlap(mask_rocket, (offset_x,offset_y)) != None
 
+def colide_ship(object1,object2): 
+    offset_x = object2.x - object1.x
+    offset_y = object2.y - object1.y
+
+    
+
+    if MISSION_SHIP_ROCKET != None:
+            mask_rocket = pygame.mask.from_surface(MISSION_SHIP)
+
+    return object1.mask.overlap(mask_rocket, (offset_x,offset_y)) != None
 
 
 
@@ -205,9 +234,12 @@ def main(SOUND_OPTİONS,SOUND_OPTİONS_COUNTER):
 
     rocket_down = 30
 
-    #enemy = EnemyShip(900,250)
+    
 
-    def draws():
+    #enemy = EnemyShip(900,250)
+    animation_counter = 1
+
+    def draws(animation_counter):
         WIN.blit(BG,(0,0)) # arka planı 0,0 noktasından koyması sağlandı
         player.draw(WIN)
 
@@ -241,27 +273,53 @@ def main(SOUND_OPTİONS,SOUND_OPTİONS_COUNTER):
         WIN.blit(text,(460,20))
 
 ###
-
+        font = pygame.font.SysFont("Algeria",30)
+        text = font.render("Health {}".format(player.health),1,(255,255,255))
+        WIN.blit(text,(120,20))
+###
+###
 
         if rocket_A == 1:
             for i in player_rockets:
                 i.draw(WIN)
             
-        
+        for i in supermans:
+            i.draw(WIN)
 
         if enemy_A == 1:
             for i in enemies:
                 i.draw(WIN)
-
+        """
+        #########################
+        image_sprite = [pygame.image.load("stop1.png"),
+				pygame.image.load("under1.png")]
+    
+        x = 40
+        y = 100
+        if animation_counter == 1:
+            image = image_sprite[0]
+        elif animation_counter == len(image_sprite):
+            y = 117
+            image = image_sprite[1]
         
-
         
+        BG.blit(image, (x, y))
+        
+        if animation_counter != len(image_sprite):
+            animation_counter += 1 
+        elif animation_counter == len(image_sprite):
+            
+            animation_counter=1
+        """
+        ################
                 
-
+        print(animation_counter)
         pygame.display.update() # ekranın yenilenmesi için 
 
 
     size = 0
+    supermans = []
+    superman_counter = 1
 
     enemies_cpy = []
     while run:
@@ -271,9 +329,13 @@ def main(SOUND_OPTİONS,SOUND_OPTİONS_COUNTER):
             rocket_down+=1
 
         clock.tick(FPS)
-        draws()
+        draws(animation_counter)
+
+
+
 
         
+
 
         if len(enemies) == 0:
             enemy_lenght +=2
@@ -333,10 +395,14 @@ def main(SOUND_OPTİONS,SOUND_OPTİONS_COUNTER):
         
         if keys[pygame.K_SPACE]:
             if rocket_down == COOL_DOWN:
-                player_rockets.append(Player_Rocket(player.x,player.y))
+                player_rockets.append(Player_Rocket(player.x+150,player.y+30))
                 rocket_down = 0
 
-
+        if keys[pygame.K_m]:
+            if superman_counter == 1:
+                superman_counter = 0
+                supermans.append(SUPERMAN_CLASS(-200,player.y))
+                pass
 
         for i in player_rockets:
             if i.x >= 900:
@@ -347,8 +413,13 @@ def main(SOUND_OPTİONS,SOUND_OPTİONS_COUNTER):
             i.move()
 
         
-
-
+        
+        for i in supermans:
+            i.move()
+        for i in supermans:
+            if i.x > 1000:
+                supermans.clear()
+                superman_counter = 1
 
 
 
@@ -372,6 +443,35 @@ def main(SOUND_OPTİONS,SOUND_OPTİONS_COUNTER):
                     
                     size+=1
                     kill+=1
+            for s in supermans:
+                a = colide(i,s)
+                #print(a) 
+                if a == True:
+                    #print(enemies,i)
+
+                    if i in enemies:
+                        enemies.remove(i)
+                    
+                    boom()
+                    
+                    size+=1
+                    kill+=1
+
+            a = colide_ship(i,player)
+                #print(a) 
+            if a == True:
+                    #print(enemies,i)
+
+                if i in enemies:
+                    enemies.remove(i)
+                
+
+                boom()
+                player.health -=10
+                    
+                size+=1
+                kill+=1
+
   
                 
 
@@ -381,7 +481,7 @@ def main(SOUND_OPTİONS,SOUND_OPTİONS_COUNTER):
                 size+=1
                 enemies_cpy.remove(i)
                   
-
+        
         #print(size,enemy_lenght)        
         if size == enemy_lenght:
             enemy_A=0
@@ -393,9 +493,65 @@ def main(SOUND_OPTİONS,SOUND_OPTİONS_COUNTER):
             size = 0
           
 
-        #print(SOUND_OPTİONS)
         
 
-      
-start()
-main(SOUND_OPTİONS,SOUND_OPTİONS_COUNTER)
+        if player.health == 0:
+            
+            
+            WIN.blit(BG,(0,0)) # arka planı 0,0 noktasından koyması sağlandı
+            pygame.display.update() # ekranın yenilenmesi için 
+            run1 = True
+            while run1:
+                WIN.blit(BG,(0,0)) # arka planı 0,0 noktasından koyması sağlandı
+
+                pygame.init() # ekrana yazı yazdırmak için gerekli
+
+                font = pygame.font.SysFont("Algeria",25)                  #
+                text = font.render("Kaybettin - Tekar oynamak için (enter) - Çıkış yapmak için pencereyi kapaın",1,(255,255,255)) # akrana yazı yazdırma
+                WIN.blit(text,(200,250))                                  #
+
+                pygame.display.update() # ekranın yenilenmesi için 
+
+                for event in pygame.event.get():   
+                            
+                        if event.type == pygame.QUIT: # kapatma tuşuna tıklanırsa kapatır
+                            run1 = False
+                            run = False
+                keys = pygame.key.get_pressed()
+
+                if keys[pygame.K_n] :
+                    run1 = False
+
+                    enemy_A = 1
+                    enemies = []
+                    enemy_lenght = 0
+                    level = 0
+
+                    kill = 0
+                    rocket_A = 1
+                    run = True
+                    
+                    gun = 0
+
+                    FPS = 60
+
+                    clock = pygame.time.Clock()
+
+                    player_rockets = []
+
+                    player = PlayerShip(10,250)
+
+                    rocket_down = 30
+
+                    animation_counter = 1
+
+                    size = 0
+                    supermans = []
+                    superman_counter = 1
+
+                    enemies_cpy = []
+   
+start(exit)
+
+if bitir.exit == 1:
+    main(SOUND_OPTİONS,SOUND_OPTİONS_COUNTER)
