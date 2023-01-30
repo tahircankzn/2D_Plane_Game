@@ -30,8 +30,6 @@ Projeyi klonlayın
 
 
   
-## Ekran Görüntüleri
 
-![Uygulama Ekran Görüntüsü](https://photos.app.goo.gl/RsJ1cHNdbcQ3KczC9)
 
   
