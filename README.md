@@ -32,6 +32,6 @@ Projeyi klonlayın
   
 ## Ekran Görüntüleri
 
-![Uygulama Ekran Görüntüsü](https://drive.google.com/file/d/1aQk_lSEUaMjQtseVrJ8tXnQkRrQrwog8/view?usp=sharing)
+![Uygulama Ekran Görüntüsü](https://photos.app.goo.gl/RsJ1cHNdbcQ3KczC9)
 
   
