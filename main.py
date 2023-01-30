@@ -3,7 +3,7 @@ import os
 import random
 from pygame import mixer
 
-pygame.display.set_caption("Kizil Elma")
+pygame.display.set_caption("KİZİL ELMA")
 
 
 
@@ -18,20 +18,20 @@ COOL_DOWN = 30 # fps değerinin yarısı
 # İMAGE yükleme
 
 # arka plan
-BG = pygame.image.load("background_space.png")
+BG = pygame.image.load("D:/pygame/2d_plane_game/2D_Plane_Game/assets/background_space.png")
 
 # gemi resim
-MISSION_SHIP = pygame.image.load("mission_ship.png")
+MISSION_SHIP = pygame.image.load("D:/pygame/2d_plane_game/2D_Plane_Game/assets/mission_ship.png")
 
 #rocket
-MISSION_SHIP_ROCKET = pygame.image.load("blue_rocket1.png")
+MISSION_SHIP_ROCKET = pygame.image.load("D:/pygame/2d_plane_game/2D_Plane_Game/assets/blue_rocket1.png")
 #SUPERMAN
-SUPERMAN = pygame.image.load("superman.png")
+SUPERMAN = pygame.image.load("D:/pygame/2d_plane_game/2D_Plane_Game/assets/superman.png")
 #düşman aracı
-ENEMY_SHİP = pygame.image.load("enemy_ship_blue.png")
+ENEMY_SHİP = pygame.image.load("D:/pygame/2d_plane_game/2D_Plane_Game/assets/enemy_ship_blue.png")
 
 # ses buton resmi , şimdilik çalışmıyor
-SOUND = pygame.image.load("sound.png")
+SOUND = pygame.image.load("D:/pygame/2d_plane_game/2D_Plane_Game/assets/sound.png")
 
 exit = 1
 
@@ -112,7 +112,7 @@ def start(exit):
 
 
 def boom():
-    boom = pygame.mixer.Sound("boom.wav")
+    boom = pygame.mixer.Sound("D:/pygame/2d_plane_game/2D_Plane_Game/sound/boom.wav")
     boom.set_volume(0.1)
     boom.play()
 
@@ -124,7 +124,7 @@ def game_music(SOUND_OPTİONS):
     mixer.init()
 
     #Load audio file
-    mixer.music.load('The Last of Us TV Show  Episode 1 Ending Song.wav')
+    mixer.music.load('D:/pygame/2d_plane_game/2D_Plane_Game/sound/The Last of Us TV Show  Episode 1 Ending Song.wav')
 
     print("music started playing....")
 
@@ -507,7 +507,7 @@ def main(SOUND_OPTİONS,SOUND_OPTİONS_COUNTER):
                 pygame.init() # ekrana yazı yazdırmak için gerekli
 
                 font = pygame.font.SysFont("Algeria",25)                  #
-                text = font.render("Kaybettin - Tekar oynamak için (enter) - Çıkış yapmak için pencereyi kapaın",1,(255,255,255)) # akrana yazı yazdırma
+                text = font.render("Kaybettin - Tekar oynamak için (n) - Çıkış yapmak için pencereyi kapaın",1,(255,255,255)) # akrana yazı yazdırma
                 WIN.blit(text,(200,250))                                  #
 
                 pygame.display.update() # ekranın yenilenmesi için 
