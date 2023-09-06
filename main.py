@@ -18,20 +18,24 @@ COOL_DOWN = 30 # fps değerinin yarısı
 # İMAGE yükleme
 
 # arka plan
-BG = pygame.image.load("D:/pygame/2d_plane_game/2D_Plane_Game/assets/background_space.png")
+BG = pygame.image.load("assets/background_space.png")
 
 # gemi resim
-MISSION_SHIP = pygame.image.load("D:/pygame/2d_plane_game/2D_Plane_Game/assets/mission_ship.png")
+MISSION_SHIP = pygame.image.load("assets/mission_ship.png")
 
 #rocket
-MISSION_SHIP_ROCKET = pygame.image.load("D:/pygame/2d_plane_game/2D_Plane_Game/assets/blue_rocket1.png")
+MISSION_SHIP_ROCKET = pygame.image.load("assets/blue_rocket1.png")
+#rocket enemy
+MISSION_ENEMY_ROCKET = pygame.image.load("assets/red_rocket.png")
+#ulti
+MISSION_ULTI = pygame.image.load("assets/ulti.png")
 #SUPERMAN
-SUPERMAN = pygame.image.load("D:/pygame/2d_plane_game/2D_Plane_Game/assets/superman.png")
+SUPERMAN = pygame.image.load("assets/superman.png")
 #düşman aracı
-ENEMY_SHİP = pygame.image.load("D:/pygame/2d_plane_game/2D_Plane_Game/assets/enemy_ship_blue.png")
+ENEMY_SHİP = pygame.image.load("assets/enemy_ship_blue.png")
 
 # ses buton resmi , şimdilik çalışmıyor
-SOUND = pygame.image.load("D:/pygame/2d_plane_game/2D_Plane_Game/assets/sound.png")
+SOUND = pygame.image.load("assets/sound.png")
 
 exit = 1
 
@@ -112,7 +116,7 @@ def start(exit):
 
 
 def boom():
-    boom = pygame.mixer.Sound("D:/pygame/2d_plane_game/2D_Plane_Game/sound/boom.wav")
+    boom = pygame.mixer.Sound("sound/boom.wav")
     boom.set_volume(0.1)
     boom.play()
 
@@ -124,7 +128,7 @@ def game_music(SOUND_OPTİONS):
     mixer.init()
 
     #Load audio file
-    mixer.music.load('D:/pygame/2d_plane_game/2D_Plane_Game/sound/The Last of Us TV Show  Episode 1 Ending Song.wav')
+    mixer.music.load('sound/The Last of Us TV Show  Episode 1 Ending Song.wav')
 
     print("music started playing....")
 
@@ -151,7 +155,7 @@ class Ship():
 # oyuncu gemisi
 
 class PlayerShip(Ship):
-    def __init__(self,x,y,health=100):
+    def __init__(self,x,y,health=200):
         super().__init__(x,y,health)
         self.ship_image = MISSION_SHIP
 
@@ -164,6 +168,17 @@ class EnemyShip(Ship):
     def move(self):
         self.x -=3
 
+class Enemy_Rocket():
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+        self.ship_image = MISSION_ENEMY_ROCKET
+        self.mask = pygame.mask.from_surface(self.ship_image)
+    def draw(self,window):
+        window.blit(self.ship_image,(self.x,self.y))
+    def move(self):
+        self.x -=5
+
 class Player_Rocket():
     def __init__(self, x, y):
         self.x = x
@@ -174,6 +189,25 @@ class Player_Rocket():
         window.blit(self.ship_image,(self.x,self.y))
     def move(self):
         self.x +=10
+
+
+class Ulti():   #######################
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+        self.ship_image = MISSION_ULTI
+        self.mask = pygame.mask.from_surface(self.ship_image)
+    def draw(self,window):
+        window.blit(self.ship_image,(self.x,self.y))
+    def move(self,x1,y1):
+        if x1 > self.x:
+            self.x +=10
+        elif x1 < self.x:
+            self.x -=10
+        if y1 < self.y:
+            self.y -=5
+        elif y1 > self.y:
+            self.y +=5
 
 
 class SUPERMAN_CLASS():
@@ -212,7 +246,7 @@ def colide_ship(object1,object2):
 
 
 def main(SOUND_OPTİONS,SOUND_OPTİONS_COUNTER):
-    game_music(SOUND_OPTİONS) 
+    #game_music(SOUND_OPTİONS) 
     enemy_A = 1
     enemies = []
     enemy_lenght = 0
@@ -230,11 +264,13 @@ def main(SOUND_OPTİONS,SOUND_OPTİONS_COUNTER):
 
     player_rockets = []
 
+    enemy_rockets = []
+
     player = PlayerShip(10,250)
 
     rocket_down = 30
 
-    
+    rocke_enemy_down = 180
 
     #enemy = EnemyShip(900,250)
     animation_counter = 1
@@ -276,8 +312,16 @@ def main(SOUND_OPTİONS,SOUND_OPTİONS_COUNTER):
         font = pygame.font.SysFont("Algeria",30)
         text = font.render("Health {}".format(player.health),1,(255,255,255))
         WIN.blit(text,(120,20))
-###
-###
+
+        
+
+        
+
+        for i in enemy_rockets:
+            i.draw(WIN)
+
+        for i in ulti:
+            i.draw(WIN)
 
         if rocket_A == 1:
             for i in player_rockets:
@@ -320,6 +364,8 @@ def main(SOUND_OPTİONS,SOUND_OPTİONS_COUNTER):
     size = 0
     supermans = []
     superman_counter = 1
+    ulti = []
+    ulti_counter = 1
 
     enemies_cpy = []
     while run:
@@ -328,11 +374,19 @@ def main(SOUND_OPTİONS,SOUND_OPTİONS_COUNTER):
         if rocket_down != 30:
             rocket_down+=1
 
+        if rocke_enemy_down == 180:
+            rocke_enemy_down = 0
+            for i in enemies:
+                enemy_rockets.append(Enemy_Rocket(i.x,i.y))
+        else:
+            rocke_enemy_down+=1
+
         clock.tick(FPS)
         draws(animation_counter)
 
 
-
+        for i in enemy_rockets:
+            i.move()
 
         
 
@@ -404,6 +458,13 @@ def main(SOUND_OPTİONS,SOUND_OPTİONS_COUNTER):
                 supermans.append(SUPERMAN_CLASS(-200,player.y))
                 pass
 
+        if keys[pygame.K_b]:
+            if ulti_counter == 1:
+                ulti_counter = 0
+                ulti.append(Ulti(player.x+150,player.y+30))
+                pass
+
+
         for i in player_rockets:
             if i.x >= 900:
                 
@@ -412,7 +473,9 @@ def main(SOUND_OPTİONS,SOUND_OPTİONS_COUNTER):
         for i in player_rockets:
             i.move()
 
-        
+        for i in ulti: ##################
+            if enemies != []:
+                i.move(enemies[0].x,enemies[0].y)
         
         for i in supermans:
             i.move()
@@ -426,7 +489,25 @@ def main(SOUND_OPTİONS,SOUND_OPTİONS_COUNTER):
         for i in enemies:
             i.move()
 
-        
+        for i in enemy_rockets:
+            
+            a = colide_ship(i,player)
+                #print(a) 
+            if a == True:
+                    #print(enemies,i)
+
+                if i in enemy_rockets:
+                    enemy_rockets.remove(i)
+                
+
+                boom()
+                player.health -=20
+                    
+                size+=1
+                
+        for i in enemy_rockets:
+            if i.x < 5:
+                enemy_rockets.remove(i)
 
         for i in enemies:
             for k in player_rockets:
@@ -443,6 +524,7 @@ def main(SOUND_OPTİONS,SOUND_OPTİONS_COUNTER):
                     
                     size+=1
                     kill+=1
+            
             for s in supermans:
                 a = colide(i,s)
                 #print(a) 
@@ -454,6 +536,21 @@ def main(SOUND_OPTİONS,SOUND_OPTİONS_COUNTER):
                     
                     boom()
                     
+                    size+=1
+                    kill+=1
+
+            for u in ulti:
+                a = colide(i,u)
+                #print(a) 
+                if a == True:
+                    #print(enemies,i)
+
+                    if i in enemies:
+                        enemies.remove(i)
+                    
+                    boom()
+                    ulti.clear()
+                    ulti_counter = 1
                     size+=1
                     kill+=1
 
