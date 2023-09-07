@@ -33,6 +33,8 @@ MISSION_ULTI = pygame.image.load("assets/ulti.png")
 SUPERMAN = pygame.image.load("assets/superman.png")
 #düşman aracı
 ENEMY_SHİP = pygame.image.load("assets/enemy_ship_blue.png")
+# shield
+SHIELD = pygame.image.load("assets/shield.png")
 
 # ses buton resmi , şimdilik çalışmıyor
 SOUND = pygame.image.load("assets/sound.png")
@@ -244,9 +246,9 @@ def colide_ship(object1,object2):
     return object1.mask.overlap(mask_rocket, (offset_x,offset_y)) != None
 
 
-
+Shield = False
 def main(SOUND_OPTİONS,SOUND_OPTİONS_COUNTER):
-    #game_music(SOUND_OPTİONS) 
+    game_music(SOUND_OPTİONS) 
     enemy_A = 1
     enemies = []
     enemy_lenght = 0
@@ -259,6 +261,8 @@ def main(SOUND_OPTİONS,SOUND_OPTİONS_COUNTER):
     gun = 0
 
     FPS = 60
+
+    
 
     clock = pygame.time.Clock()
 
@@ -274,6 +278,8 @@ def main(SOUND_OPTİONS,SOUND_OPTİONS_COUNTER):
 
     #enemy = EnemyShip(900,250)
     animation_counter = 1
+
+    
 
     def draws(animation_counter):
         WIN.blit(BG,(0,0)) # arka planı 0,0 noktasından koyması sağlandı
@@ -314,6 +320,19 @@ def main(SOUND_OPTİONS,SOUND_OPTİONS_COUNTER):
         WIN.blit(text,(120,20))
 
         
+
+        if kill <= 20:
+
+            font = pygame.font.SysFont("Algeria",30)
+            text = font.render(f"Shield {kill*5}%",1,(255,255,255))
+            WIN.blit(text,(250,20))
+        else:
+            global Shield
+            Shield = True
+            font = pygame.font.SysFont("Algeria",30)
+            text = font.render("Shield 100%",1,(255,255,255))
+            WIN.blit(text,(250,20))
+            
 
         
 
@@ -446,6 +465,8 @@ def main(SOUND_OPTİONS,SOUND_OPTİONS_COUNTER):
         if keys[pygame.K_DOWN] and player.y < 500:
             player.y +=STEP
             
+        if keys[pygame.K_v] and Shield == True:
+            player.ship_image = SHIELD
         
         if keys[pygame.K_SPACE]:
             if rocket_down == COOL_DOWN:
@@ -489,21 +510,39 @@ def main(SOUND_OPTİONS,SOUND_OPTİONS_COUNTER):
         for i in enemies:
             i.move()
 
-        for i in enemy_rockets:
-            
-            a = colide_ship(i,player)
-                #print(a) 
-            if a == True:
-                    #print(enemies,i)
-
-                if i in enemy_rockets:
-                    enemy_rockets.remove(i)
+        if player.ship_image != SHIELD:
+            for i in enemy_rockets:
                 
+                a = colide_ship(i,player)
+                    #print(a) 
+                if a == True:
+                        #print(enemies,i)
 
-                boom()
-                player.health -=20
+                    if i in enemy_rockets:
+                        enemy_rockets.remove(i)
                     
-                size+=1
+
+                    boom()
+                    player.health -=20
+                        
+                    size+=1
+        else:
+            for i in enemy_rockets:
+                
+                a = colide_ship(i,player)
+                    #print(a) 
+                if a == True:
+                        #print(enemies,i)
+
+                    if i in enemy_rockets:
+                        enemy_rockets.remove(i)
+                    
+
+                    boom()
+                    
+                        
+                    size+=1
+
                 
         for i in enemy_rockets:
             if i.x < 5:
@@ -554,20 +593,38 @@ def main(SOUND_OPTİONS,SOUND_OPTİONS_COUNTER):
                     size+=1
                     kill+=1
 
-            a = colide_ship(i,player)
-                #print(a) 
-            if a == True:
-                    #print(enemies,i)
+            
+            if player.ship_image != SHIELD:
+                a = colide_ship(i,player)
+                    #print(a) 
+                if a == True:
+                        #print(enemies,i)
 
-                if i in enemies:
-                    enemies.remove(i)
-                
-
-                boom()
-                player.health -=10
+                    if i in enemies:
+                        enemies.remove(i)
                     
-                size+=1
-                kill+=1
+
+                    boom()
+                    player.health -=10
+                        
+                    size+=1
+                    kill+=1
+            else:
+                a = colide_ship(i,player)
+                    #print(a) 
+                if a == True:
+                        #print(enemies,i)
+
+                    if i in enemies:
+                        enemies.remove(i)
+                    
+
+                    boom()
+                    
+                        
+                    size+=1
+                    kill+=1
+
 
   
                 
