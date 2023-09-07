@@ -7,18 +7,25 @@ pygame.display.set_caption("KİZİL ELMA")
 
 
 
-WIDHT = 1000 # ekran genişliği
-HEIGHT = 562 # ekran yüksekliği
+WIDHT = 1680#1000 # ekran genişliği
+HEIGHT = 1050#562 # ekran yüksekliği
 WIN = pygame.display.set_mode((WIDHT,HEIGHT)) # ekran oluşturma
 STEP = 5
 SOUND_OPTİONS = 0.1
 SOUND_OPTİONS_COUNTER = 1
 COOL_DOWN = 30 # fps değerinin yarısı
 
+# OYUN TUŞLARI
+
+B = pygame.image.load("assets/b.png")
+B_RED = pygame.image.load("assets/b_RED.png")
+
+
+
 # İMAGE yükleme
 
 # arka plan
-BG = pygame.image.load("assets/background_space.png")
+BG = pygame.image.load("assets/firewatch.JPg")
 
 # gemi resim
 MISSION_SHIP = pygame.image.load("assets/mission_ship.png")
@@ -50,16 +57,16 @@ bitir = exits(1)
 # başlangıç ekranı 
 def start(exit):
     x =-300 
-    y = 100
+    y = 250
 
-    x1 = 1150
-    y1 = 350
+    x1 = 1780
+    y1 = 650
 
-    x2 = 1050
-    y2 = 400
+    x2 = 1680
+    y2 = 700
 
-    x3 = 1150
-    y3 = 450
+    x3 = 1780
+    y3 = 750
 
     
     WIN.blit(BG,(0,0)) # arka planı 0,0 noktasından koyması sağlandı
@@ -68,7 +75,7 @@ def start(exit):
     while run1:
         WIN.blit(BG,(0,0)) # arka planı 0,0 noktasından koyması sağlandı
         
-        if x<1200:
+        if x<1680:
             WIN.blit(MISSION_SHIP,(x,y))
             x+=5
         else:
@@ -83,9 +90,9 @@ def start(exit):
             x3-=5
 
         else:
-            x1 = 1150
-            x2 = 1050
-            x3 = 1150
+            x1 = 1780
+            x2 = 1680
+            x3 = 1780
             
 
         
@@ -93,22 +100,18 @@ def start(exit):
             
         pygame.init() # ekrana yazı yazdırmak için gerekli
 
-        font = pygame.font.SysFont("Algeria",60)                  #
+        font = pygame.font.SysFont("Algeria",120)                  #
         text = font.render("Başlamak İçin Tıkla",1,(255,255,255)) # akrana yazı yazdırma
-        WIN.blit(text,(300,250))                                  #
+        WIN.blit(text,(450,450))                                  #
 
         pygame.display.update() # ekranın yenilenmesi için 
 
         for event in pygame.event.get(): # kapatma tuşuna tıklanırsa kapatır  
                     
                 if event.type == pygame.MOUSEBUTTONDOWN:
-                    mouse_x = event.pos[0]
-                    mouse_y = event.pos[1]
-                    print(mouse_x,mouse_y)
-                    if mouse_x > 280 and mouse_x < 720:
-                        if mouse_y > 250 and mouse_y < 320:
-                            run1 =False
-                            boom()
+                    run1 = False
+                    boom()
+
                 if event.type == pygame.QUIT:
                     run1 = False
                     bitir.exit = 0
@@ -141,7 +144,38 @@ def game_music(SOUND_OPTİONS):
     mixer.music.play(-1)
 
 
+class Keys():
+    def __init__(self):
 
+        self.B = pygame.image.load("assets/b.png")
+        self.B_RED = pygame.image.load("assets/b_RED.png")
+
+        self.M = pygame.image.load("assets/m.png")
+        self.M_RED = pygame.image.load("assets/m_RED.png")
+
+        self.V = pygame.image.load("assets/v.png")
+        self.V_RED = pygame.image.load("assets/v_RED.png")
+
+
+        self.SPACE = pygame.image.load("assets/space.png")
+        self.SPACE_RED = pygame.image.load("assets/space_RED.png")
+
+        self.HAREKET_DOWN = pygame.image.load("assets/destinity_key_asagi.png")
+        self.HAREKET_UP = pygame.image.load("assets/destinity_keys_yukari.png")
+        self.HAREKET_UP_LEFT = pygame.image.load("assets/destinity_keys_SOL_YUKARİ.png")
+        self.HAREKET_UP_RİGHT = pygame.image.load("assets/destinity_keys_sag_yukari.png")
+        self.HAREKET_DOWN_LEFT = pygame.image.load("assets/destinity_keysol_asagi.png")
+        self.HAREKET_DOWN_RİGHT = pygame.image.load("assets/destinity_keys_sol_asagi.png")
+        self.HAREKET = pygame.image.load("assets/destinity_keys.png")
+        self.HAREKET_RİGHT = pygame.image.load("assets/destinity_keys_sag.png")
+        self.HAREKET_LEFT = pygame.image.load("assets/destinity_keys_sol.png")
+
+
+        self.yön = self.HAREKET
+        self.v = self.V
+        self.b = self.B
+        self.m = self.M
+        self.space = self.SPACE
 
 
 # gemi
@@ -244,7 +278,7 @@ def colide_ship(object1,object2):
             mask_rocket = pygame.mask.from_surface(MISSION_SHIP)
 
     return object1.mask.overlap(mask_rocket, (offset_x,offset_y)) != None
-
+key_image = Keys()
 
 Shield = False
 def main(SOUND_OPTİONS,SOUND_OPTİONS_COUNTER):
@@ -282,9 +316,23 @@ def main(SOUND_OPTİONS,SOUND_OPTİONS_COUNTER):
     
 
     def draws(animation_counter):
+        
+        
+
         WIN.blit(BG,(0,0)) # arka planı 0,0 noktasından koyması sağlandı
         player.draw(WIN)
 
+        # tuşlar 
+        global key_image
+        a = 150
+        WIN.blit(key_image.yön,(100+a,800))
+        WIN.blit(key_image.space,(400+a,892))
+        WIN.blit(key_image.b,(800+a,892))
+        WIN.blit(key_image.m,(1000+a,892))
+        WIN.blit(key_image.v,(1200+a,886))
+        
+
+        #################
 
         ## ses kapama resmi
         WIN.blit(SOUND,(10,10))
@@ -292,46 +340,63 @@ def main(SOUND_OPTİONS,SOUND_OPTİONS_COUNTER):
 ### yazı yazdırma
         pygame.init()
         font = pygame.font.SysFont("Algeria",30)
-        text = font.render("Enemy : {}".format(len(enemies)),1,(255,255,255))
-        WIN.blit(text,(880,10))
+        text = font.render("Düşman : {}".format(len(enemies)),1,(255,255,255))
+        WIN.blit(text,(1080+50,20))
 ###
 ### yazı yazdırma
         
         font = pygame.font.SysFont("Algeria",30)
-        text = font.render("Kill : {}".format(kill),1,(255,255,255))
-        WIN.blit(text,(780,10))
+        text = font.render("Leş : {}".format(kill),1,(255,255,255))
+        WIN.blit(text,(980+50,20))
 ###
 ###
 
         font = pygame.font.SysFont("Algeria",30)
         text = font.render("From",1,(0,0,255))
-        WIN.blit(text,(400,20))
+        WIN.blit(text,(600+100,20))
 
 ###
 ###
 
         font = pygame.font.SysFont("Algeria",30)
         text = font.render("Tahir Can Kozan",1,(255,255,255))
-        WIN.blit(text,(460,20))
+        WIN.blit(text,(660+100,20))
 
 ###
         font = pygame.font.SysFont("Algeria",30)
-        text = font.render("Health {}".format(player.health),1,(255,255,255))
-        WIN.blit(text,(120,20))
+        text = font.render("Can {}".format(player.health),1,(255,255,255))
+        WIN.blit(text,(320+50,20))
 
-        
+        font = pygame.font.SysFont("Algeria",30)
+        text = font.render("Ateş",1,(255,255,255))
+        WIN.blit(text,(680,870))
 
-        if kill <= 20:
+
+        font = pygame.font.SysFont("Algeria",30)
+        text = font.render("Güdümlü Füze",1,(255,255,255))
+        WIN.blit(text,(925,870))
+
+
+        font = pygame.font.SysFont("Algeria",30)
+        text = font.render("Süper Yardım",1,(255,255,255))
+        WIN.blit(text,(1125,870))
+
+
+        font = pygame.font.SysFont("Algeria",30)
+        text = font.render("Zırh",1,(255,255,255))
+        WIN.blit(text,(1370,870))
+
+        if kill < 20:
 
             font = pygame.font.SysFont("Algeria",30)
-            text = font.render(f"Shield {kill*5}%",1,(255,255,255))
-            WIN.blit(text,(250,20))
+            text = font.render(f"Zırh {kill*5}%",1,(255,255,255))
+            WIN.blit(text,(450+50,20))
         else:
             global Shield
             Shield = True
             font = pygame.font.SysFont("Algeria",30)
             text = font.render("Shield 100%",1,(255,255,255))
-            WIN.blit(text,(250,20))
+            WIN.blit(text,(450+50,20))
             
 
         
@@ -352,29 +417,7 @@ def main(SOUND_OPTİONS,SOUND_OPTİONS_COUNTER):
         if enemy_A == 1:
             for i in enemies:
                 i.draw(WIN)
-        """
-        #########################
-        image_sprite = [pygame.image.load("stop1.png"),
-				pygame.image.load("under1.png")]
-    
-        x = 40
-        y = 100
-        if animation_counter == 1:
-            image = image_sprite[0]
-        elif animation_counter == len(image_sprite):
-            y = 117
-            image = image_sprite[1]
-        
-        
-        BG.blit(image, (x, y))
-        
-        if animation_counter != len(image_sprite):
-            animation_counter += 1 
-        elif animation_counter == len(image_sprite):
-            
-            animation_counter=1
-        """
-        ################
+       
                 
         print(animation_counter)
         pygame.display.update() # ekranın yenilenmesi için 
@@ -415,7 +458,7 @@ def main(SOUND_OPTİONS,SOUND_OPTİONS_COUNTER):
             if enemy_lenght == 10:
                 enemy_lenght = 0
             for i in range(enemy_lenght):
-                enemies.append(EnemyShip(random.randint(1000,1400),random.randint(100,500)))
+                enemies.append(EnemyShip(random.randint(1680,1800),random.randint(100,650)))
             enemies_cpy = enemies
 
 
@@ -448,46 +491,74 @@ def main(SOUND_OPTİONS,SOUND_OPTİONS_COUNTER):
 
 
 
-
-
+        global key_image
+        key_list = []
         keys = pygame.key.get_pressed()
 
         if keys[pygame.K_LEFT] and player.x > 0:
             player.x -=STEP
-            
-        if keys[pygame.K_RIGHT] and player.x < 200:
+            key_image.yön = key_image.HAREKET_LEFT
+            key_list.append("left")
+
+        if keys[pygame.K_RIGHT] and player.x < 600:
             player.x +=STEP
-            
+            key_image.yön = key_image.HAREKET_RİGHT
+            key_list.append("right")
 
         if keys[pygame.K_UP] and player.y > 0:
             player.y -=STEP 
+            key_image.yön = key_image.HAREKET_UP
+            key_list.append("up")
              
-        if keys[pygame.K_DOWN] and player.y < 500:
+        if keys[pygame.K_DOWN] and player.y < 750:
             player.y +=STEP
+            key_image.yön = key_image.HAREKET_DOWN
+            key_list.append("down")
             
         if keys[pygame.K_v] and Shield == True:
             player.ship_image = SHIELD
+            key_image.v = key_image.V_RED
         
         if keys[pygame.K_SPACE]:
             if rocket_down == COOL_DOWN:
                 player_rockets.append(Player_Rocket(player.x+150,player.y+30))
                 rocket_down = 0
+            key_image.space = key_image.SPACE_RED
 
         if keys[pygame.K_m]:
             if superman_counter == 1:
                 superman_counter = 0
                 supermans.append(SUPERMAN_CLASS(-200,player.y))
                 pass
+            key_image.m = key_image.M_RED
 
         if keys[pygame.K_b]:
             if ulti_counter == 1:
                 ulti_counter = 0
                 ulti.append(Ulti(player.x+150,player.y+30))
                 pass
+            key_image.b = key_image.B_RED
 
+        if keys[pygame.K_b] == False and keys[pygame.K_RIGHT] == False and keys[pygame.K_UP] == False and keys[pygame.K_DOWN] == False and keys[pygame.K_v] == False and keys[pygame.K_SPACE] == False and keys[pygame.K_m] == False and keys[pygame.K_b] == False:
+            key_image.yön = key_image.HAREKET
+            key_image.v = key_image.V
+            key_image.b = key_image.B
+            key_image.m = key_image.M
+            key_image.space = key_image.SPACE
+            
+        if "left" in key_list and "up" in key_list:
+            key_image.yön = key_image.HAREKET_UP_LEFT
+        elif "right" in key_list and "up" in key_list:
+            key_image.yön = key_image.HAREKET_UP_RİGHT
+        elif "left" in key_list and "down" in key_list:
+            key_image.yön = key_image.HAREKET_DOWN_LEFT
+        elif "right" in key_list and "down" in key_list:
+            key_image.yön = key_image.HAREKET_DOWN_RİGHT
+
+        key_list.clear()
 
         for i in player_rockets:
-            if i.x >= 900:
+            if i.x >= 1680:
                 
                 player_rockets.remove(i)
 
@@ -501,7 +572,7 @@ def main(SOUND_OPTİONS,SOUND_OPTİONS_COUNTER):
         for i in supermans:
             i.move()
         for i in supermans:
-            if i.x > 1000:
+            if i.x > 1680:
                 supermans.clear()
                 superman_counter = 1
 
