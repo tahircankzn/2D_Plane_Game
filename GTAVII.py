@@ -11,7 +11,7 @@ WIDHT = 1680#1000 # ekran genişliği
 HEIGHT = 1050#562 # ekran yüksekliği
 WIN = pygame.display.set_mode((WIDHT,HEIGHT)) # ekran oluşturma
 STEP = 5
-SOUND_OPTİONS = 0.1
+SOUND_OPTİONS = 0.3
 SOUND_OPTİONS_COUNTER = 1
 COOL_DOWN = 30 # fps değerinin yarısı
 
@@ -28,7 +28,7 @@ B_RED = pygame.image.load("assets/b_RED.png")
 BG = pygame.image.load("assets/firewatch.JPg")
 
 # gemi resim
-MISSION_SHIP = pygame.image.load("assets/mission_ship.png")
+MISSION_SHIP = pygame.image.load("assets/plane_poyraz.png") # plane_poyraz  mission_ship
 
 #rocket
 MISSION_SHIP_ROCKET = pygame.image.load("assets/blue_rocket1.png")
@@ -36,13 +36,24 @@ MISSION_SHIP_ROCKET = pygame.image.load("assets/blue_rocket1.png")
 MISSION_ENEMY_ROCKET = pygame.image.load("assets/red_rocket.png")
 #ulti
 MISSION_ULTI = pygame.image.load("assets/ulti.png")
-#SUPERMAN
-SUPERMAN = pygame.image.load("assets/superman.png")
+#Captain Marvel image
+CaptainMarvel_image = pygame.image.load("assets/captainMarvel_image.png")
+#Captain Marvel
+CaptainMarvel1 = pygame.image.load("assets/captainmarvel1.png")
+#Captain Marvel2
+CaptainMarvel2 = pygame.image.load("assets/captainmarvel2.png")
+#IRON MAN
+IRONMAN = pygame.image.load("assets/iron_man.png")
+IRONMAN_image = pygame.image.load("assets/tony_image.png")
 #düşman aracı
 ENEMY_SHİP = pygame.image.load("assets/enemy_ship_blue.png")
 # shield
-SHIELD = pygame.image.load("assets/shield.png")
-
+SHIELD = pygame.image.load("assets/plane_poyraz_shield.png") # shield
+#Thor
+THOR = pygame.image.load("assets/thor1.png")
+THOR_image = pygame.image.load("assets/thor_image.png")
+THOR_cloud = pygame.image.load("assets/cloud.png")
+THOR_storm = pygame.image.load("assets/storm.png") # storm
 # ses buton resmi , şimdilik çalışmıyor
 SOUND = pygame.image.load("assets/sound.png")
 
@@ -94,10 +105,7 @@ def start(exit):
             x2 = 1680
             x3 = 1780
             
-
-        
-        
-            
+         
         pygame.init() # ekrana yazı yazdırmak için gerekli
 
         font = pygame.font.SysFont("Algeria",120)                  #
@@ -116,32 +124,36 @@ def start(exit):
                     run1 = False
                     bitir.exit = 0
 
-        
-    
-
 
 def boom():
     boom = pygame.mixer.Sound("sound/boom.wav")
-    boom.set_volume(0.1)
+    boom.set_volume(0.05)
+    boom.play()
+    pygame.mixer.music.set_endevent(pygame.USEREVENT+1)
+
+def CaptainMarvel_voice():
+    boom = pygame.mixer.Sound("sound/captainMARVEL.wav")
+    boom.set_volume(0.5)
+    boom.play()
+
+def IronMan_voice():
+    boom = pygame.mixer.Sound("sound/IronMan.wav")
+    boom.set_volume(0.5)
     boom.play()
 
 
+def Thor_voice():
+    boom = pygame.mixer.Sound("sound/THOR2.wav")
+    boom.set_volume(0.5)
+    boom.play()
+
 def game_music(SOUND_OPTİONS):
-    #music
-    # arka plan müziği
-    #Instantiate mixer
     mixer.init()
-
-    #Load audio file
-    mixer.music.load('sound/The Last of Us TV Show  Episode 1 Ending Song.wav')
-
+    mixer.music.load('sound/back_ground.wav') # back_ground.wav  # The Last of Us TV Show  Episode 1 Ending Song.wav
     print("music started playing....")
-
-    #Set preferred volume
     mixer.music.set_volume(SOUND_OPTİONS)
-
-    #Play the music
     mixer.music.play(-1)
+    
 
 
 class Keys():
@@ -197,23 +209,25 @@ class PlayerShip(Ship):
 
 
 class EnemyShip(Ship):
-    def __init__(self, x, y, health=100):
+    def __init__(self, x, y, health=100,speed = 3):
         super().__init__(x, y, health)
         self.ship_image = ENEMY_SHİP
         self.mask = pygame.mask.from_surface(self.ship_image)
+        self.speed = speed
     def move(self):
-        self.x -=3
+        self.x -= self.speed
 
 class Enemy_Rocket():
-    def __init__(self, x, y):
+    def __init__(self, x, y,speed = 5):
         self.x = x
         self.y = y
         self.ship_image = MISSION_ENEMY_ROCKET
         self.mask = pygame.mask.from_surface(self.ship_image)
+        self.speed = speed
     def draw(self,window):
         window.blit(self.ship_image,(self.x,self.y))
     def move(self):
-        self.x -=5
+        self.x -= self.speed
 
 class Player_Rocket():
     def __init__(self, x, y):
@@ -246,15 +260,41 @@ class Ulti():   #######################
             self.y +=5
 
 
-class SUPERMAN_CLASS():
+class Captain_Marvel_CLASS():
     def __init__(self,x,y):
         self.x = x
         self.y = y
-        self.image = SUPERMAN
+        self.image = CaptainMarvel1
     def draw(self,window):
         window.blit(self.image,(self.x,self.y))
     def move(self):
         self.x += 5
+
+class Iron_Man_CLASS(Captain_Marvel_CLASS):
+    def __init__(self, x, y):
+        super().__init__(x, y)
+        self.image = IRONMAN
+
+class Thor_CLASS(Captain_Marvel_CLASS):
+    def __init__(self, x, y):
+        super().__init__(x, y)
+        self.image = THOR
+
+    def move(self):
+        if self.x < 750:
+            self.x +=5
+        if self.y > 400:
+            self.y -=4
+    def move_run(self):
+        self.x +=5
+        self.y -=4
+
+class STORM():
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+        self.image = THOR_storm
+        
 
 # çarpışma
 def colide(object1,object2): 
@@ -265,6 +305,25 @@ def colide(object1,object2):
 
     if MISSION_SHIP_ROCKET != None:
             mask_rocket = pygame.mask.from_surface(MISSION_SHIP_ROCKET)
+
+    return object1.mask.overlap(mask_rocket, (offset_x,offset_y)) != None
+
+def thor_colide(object1,object2): 
+    offset_x = object2.x - object1.x
+    offset_y = object2.y - object1.y
+
+    
+
+    if MISSION_SHIP_ROCKET != None:
+            mask_rocket = pygame.mask.from_surface(THOR)
+
+    return object1.mask.overlap(mask_rocket, (offset_x,offset_y)) != None
+
+def colide_storm(object1,object2): 
+    offset_x = object2.x - object1.x
+    offset_y = object2.y - object1.y
+
+    mask_rocket = pygame.mask.from_surface(THOR_storm)
 
     return object1.mask.overlap(mask_rocket, (offset_x,offset_y)) != None
 
@@ -281,6 +340,13 @@ def colide_ship(object1,object2):
 key_image = Keys()
 
 Shield = False
+strom2 = 0
+
+class Hold_storm():
+    def __init__(self,storm=None):
+        self.storm = storm
+
+hold_storm = Hold_storm()     
 def main(SOUND_OPTİONS,SOUND_OPTİONS_COUNTER):
     game_music(SOUND_OPTİONS) 
     enemy_A = 1
@@ -306,21 +372,61 @@ def main(SOUND_OPTİONS,SOUND_OPTİONS_COUNTER):
 
     player = PlayerShip(10,250)
 
-    rocket_down = 30
+    rocket_down = 30 # 30
 
     rocke_enemy_down = 180
 
     #enemy = EnemyShip(900,250)
     animation_counter = 1
 
-    
+    captain_counter = 0
+    tony_counter = 0    
+    thor_counter = 0
 
+    thor_clouds = []
+    thor_storms = []
+    
+    thor_storms_wait = 0    
+    storm_kill = 0
     def draws(animation_counter):
-        
+         
         
 
         WIN.blit(BG,(0,0)) # arka planı 0,0 noktasından koyması sağlandı
+        # captain
+        if captain_counter == 1:
+            WIN.blit(CaptainMarvel_image,(-50,290))
+        if tony_counter == 1:
+            WIN.blit(IRONMAN_image,(-25,290))
+        if thor_counter == 1:
+            WIN.blit(THOR_image,(-25,310))
+            
         player.draw(WIN)
+
+        if len(thor_clouds) > 1:
+            for i in thor_clouds:
+                WIN.blit(THOR_cloud,i) # THOR_storm , THOR_cloud
+        
+        if len(thor_storms) > 1:
+            global hold_storm
+            if thor_storms_wait  < 30:
+                if thor_storms_wait == 0:
+                    storm1 = random.choice(thor_storms)
+                    ################# DENEME
+                    """global strom2
+                    storm1 = thor_storms[strom2]
+                    strom2 +=1
+                    if strom2 >=2:
+                        strom2 -= 2"""
+                    #################
+                    hold_storm.storm = storm1
+                if hold_storm.storm != None:
+                    WIN.blit(hold_storm.storm.image,(hold_storm.storm.x,hold_storm.storm.y))
+                """if strom2 >=2:
+                        strom2 -= 2"""
+            """for i in thor_storms:
+                WIN.blit(THOR_storm,i)"""
+        
 
         # tuşlar 
         global key_image
@@ -333,6 +439,7 @@ def main(SOUND_OPTİONS,SOUND_OPTİONS_COUNTER):
         
 
         #################
+        
 
         ## ses kapama resmi
         WIN.blit(SOUND,(10,10))
@@ -399,8 +506,6 @@ def main(SOUND_OPTİONS,SOUND_OPTİONS_COUNTER):
             WIN.blit(text,(450+50,20))
             
 
-        
-
         for i in enemy_rockets:
             i.draw(WIN)
 
@@ -419,7 +524,7 @@ def main(SOUND_OPTİONS,SOUND_OPTİONS_COUNTER):
                 i.draw(WIN)
        
                 
-        print(animation_counter)
+        #print(animation_counter)
         pygame.display.update() # ekranın yenilenmesi için 
 
 
@@ -430,16 +535,19 @@ def main(SOUND_OPTİONS,SOUND_OPTİONS_COUNTER):
     ulti_counter = 1
 
     enemies_cpy = []
+
+    storm_counter = 1
+    
     while run:
         
         
         if rocket_down != 30:
             rocket_down+=1
 
-        if rocke_enemy_down == 180:
+        if rocke_enemy_down == 180: # 180
             rocke_enemy_down = 0
             for i in enemies:
-                enemy_rockets.append(Enemy_Rocket(i.x,i.y))
+                enemy_rockets.append(Enemy_Rocket(i.x,i.y,speed=5+enemy_lenght))
         else:
             rocke_enemy_down+=1
 
@@ -450,21 +558,15 @@ def main(SOUND_OPTİONS,SOUND_OPTİONS_COUNTER):
         for i in enemy_rockets:
             i.move()
 
-        
-
-
+    
         if len(enemies) == 0:
             enemy_lenght +=2
-            if enemy_lenght == 10:
+            if enemy_lenght == 10: # 10
                 enemy_lenght = 0
             for i in range(enemy_lenght):
-                enemies.append(EnemyShip(random.randint(1680,1800),random.randint(100,650)))
+                enemies.append(EnemyShip(random.randint(1680,1800),random.randint(100,650),speed=enemy_lenght-1))
             enemies_cpy = enemies
-
-
-    
-
-        
+ 
 
         for event in pygame.event.get(): # kapatma tuşuna tıklanırsa kapatır
             if event.type == pygame.QUIT:
@@ -486,10 +588,6 @@ def main(SOUND_OPTİONS,SOUND_OPTİONS_COUNTER):
                             SOUND_OPTİONS += 0.1  
                             SOUND_OPTİONS_COUNTER +=1 
                             
-
-
-
-
 
         global key_image
         key_list = []
@@ -521,15 +619,26 @@ def main(SOUND_OPTİONS,SOUND_OPTİONS_COUNTER):
         
         if keys[pygame.K_SPACE]:
             if rocket_down == COOL_DOWN:
-                player_rockets.append(Player_Rocket(player.x+150,player.y+30))
+                player_rockets.append(Player_Rocket(player.x+300,player.y+100))   # Player_Rocket(player.x+150,player.y+30)
                 rocket_down = 0
             key_image.space = key_image.SPACE_RED
 
         if keys[pygame.K_m]:
             if superman_counter == 1:
                 superman_counter = 0
-                supermans.append(SUPERMAN_CLASS(-200,player.y))
-                pass
+                hero = random.randint(1,3)
+                if hero == 1:
+                    supermans.append(Captain_Marvel_CLASS(-200,player.y))
+                    CaptainMarvel_voice()
+                    captain_counter = 1
+                elif hero == 2:
+                    supermans.append(Iron_Man_CLASS(-200,player.y))
+                    IronMan_voice()
+                    tony_counter = 1
+                elif hero == 3:
+                    supermans.append(Thor_CLASS(-200,1050))
+                    Thor_voice()
+                    thor_counter = 1
             key_image.m = key_image.M_RED
 
         if keys[pygame.K_b]:
@@ -570,13 +679,55 @@ def main(SOUND_OPTİONS,SOUND_OPTİONS_COUNTER):
                 i.move(enemies[0].x,enemies[0].y)
         
         for i in supermans:
-            i.move()
+            if thor_counter == 1:
+                if storm_kill < 4:
+                    i.move()
+                else:
+                    i.move_run()
+                
+            else:
+                i.move()
+
         for i in supermans:
             if i.x > 1680:
                 supermans.clear()
+                captain_counter = 0
+                tony_counter = 0
                 superman_counter = 1
+                if thor_counter == 1:
+                    thor_counter = 0
+                    thor_clouds.clear()
+                    thor_storms.clear()
+                    hold_storm.storm = None
+                    storm_kill = 0
+                    thor_storms_wait = 0
+                    storm_counter = 1
+
+        if thor_counter == 1:
+            
+            if supermans[0].x == 750 and supermans[0].y == 398 and storm_counter == 1:
+                #thor_clouds.append([50,10])
+                #thor_clouds.append([550,10])
+                #thor_clouds.append([1050,10])
 
 
+                print(1111)
+                thor_storms.append(STORM(100,100)) # 100
+                thor_storms.append(STORM(600,100))
+                thor_storms.append(STORM(1100,100))
+                storm_counter = 0
+
+            if thor_storms_wait == 30:
+                thor_storms_wait = 0
+            else:
+                thor_storms_wait+=1
+                
+
+        for i in supermans:
+            if i.x > 450:
+                if captain_counter == 1:
+                    i.image = CaptainMarvel2
+                
 
         for i in enemies:
             i.move()
@@ -585,9 +736,9 @@ def main(SOUND_OPTİONS,SOUND_OPTİONS_COUNTER):
             for i in enemy_rockets:
                 
                 a = colide_ship(i,player)
-                    #print(a) 
+                    
                 if a == True:
-                        #print(enemies,i)
+                        
 
                     if i in enemy_rockets:
                         enemy_rockets.remove(i)
@@ -601,9 +752,9 @@ def main(SOUND_OPTİONS,SOUND_OPTİONS_COUNTER):
             for i in enemy_rockets:
                 
                 a = colide_ship(i,player)
-                    #print(a) 
+                    
                 if a == True:
-                        #print(enemies,i)
+                        
 
                     if i in enemy_rockets:
                         enemy_rockets.remove(i)
@@ -611,20 +762,32 @@ def main(SOUND_OPTİONS,SOUND_OPTİONS_COUNTER):
 
                     boom()
                     
-                        
-                    
-
-                
+        
         for i in enemy_rockets:
             if i.x < 5:
                 enemy_rockets.remove(i)
 
         for i in enemies:
+            if hold_storm.storm != None:
+                a = colide_storm(i,hold_storm.storm)
+                 
+                if a == True:
+                    
+
+                    if i in enemies:
+                        enemies.remove(i)
+                    
+
+                    boom()
+                    storm_kill +=1
+                    size+=1
+                    kill+=1
+
             for k in player_rockets:
                 a = colide(i,k)
-                #print(a) 
+                 
                 if a == True:
-                    #print(enemies,i)
+                    
 
                     if i in enemies:
                         enemies.remove(i)
@@ -636,24 +799,39 @@ def main(SOUND_OPTİONS,SOUND_OPTİONS_COUNTER):
                     kill+=1
             
             for s in supermans:
-                a = colide(i,s)
-                #print(a) 
-                if a == True:
-                    #print(enemies,i)
+                if thor_counter != 1:
+                    a = colide(i,s)
+                    
+                    if a == True:
+                        
 
-                    if i in enemies:
-                        enemies.remove(i)
+                        if i in enemies:
+                            enemies.remove(i)
+                        
+                        boom()
+                        
+                        size+=1
+                        kill+=1
+                else:
                     
-                    boom()
+                    a = thor_colide(i,s)
                     
-                    size+=1
-                    kill+=1
+                    if a == True:
+                        
+
+                        if i in enemies:
+                            enemies.remove(i)
+                        
+                        boom()
+                        
+                        size+=1
+                        kill+=1
 
             for u in ulti:
                 a = colide(i,u)
-                #print(a) 
+                
                 if a == True:
-                    #print(enemies,i)
+                    
 
                     if i in enemies:
                         enemies.remove(i)
@@ -667,9 +845,9 @@ def main(SOUND_OPTİONS,SOUND_OPTİONS_COUNTER):
             
             if player.ship_image != SHIELD:
                 a = colide_ship(i,player)
-                    #print(a) 
+                   
                 if a == True:
-                        #print(enemies,i)
+                        
 
                     if i in enemies:
                         enemies.remove(i)
@@ -682,25 +860,18 @@ def main(SOUND_OPTİONS,SOUND_OPTİONS_COUNTER):
                     kill+=1
             else:
                 a = colide_ship(i,player)
-                    #print(a) 
+                    
                 if a == True:
-                        #print(enemies,i)
-
+                    
                     if i in enemies:
                         enemies.remove(i)
-                    
 
                     boom()
-                    
-                        
+           
                     size+=1
                     kill+=1
 
-
-  
-                
-
-        
+ 
         for i in enemies_cpy:
             if i.x <= 0:
                 size+=1
@@ -717,8 +888,6 @@ def main(SOUND_OPTİONS,SOUND_OPTİONS_COUNTER):
             
             size = 0
           
-
-        
 
         if player.health == 0:
             
