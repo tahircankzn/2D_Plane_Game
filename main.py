@@ -3,7 +3,7 @@ import os
 import random
 from pygame import mixer
 
-pygame.display.set_caption("KİZİL ELMA")
+pygame.display.set_caption("Gökyüzü Savaşçısı")
 
 
 
