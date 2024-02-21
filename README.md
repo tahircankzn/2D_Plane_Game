@@ -7,7 +7,7 @@ Bu, Python ve Pygame kütüphanesi kullanılarak geliştirilen basit bir 2D uça
 - Oyun, gemiyi yönlendirmek için klavye tuşlarını kullanır.
 - "Space" tuşuyla ateş edebilirsiniz.
 - "M" tuşuyla farklı süper kahramanları çağırabilirsiniz.
-- "B" tuşuyla süper güç kullanabilirsiniz.
+- "B" tuşuyla özelleşmiş roketi kullanabilirsiniz.
 - "V" tuşuyla zırhı aktifleştirebilirsiniz.
 
 ## Oyun Ekranı Görüntüsü
