@@ -44,7 +44,7 @@ Bu, Python ve Pygame kütüphanesi kullanılarak geliştirilen basit bir 2D uça
 
 ## Oyun Ekranı Görüntüsü
 
-![Oyun Ekranı](assets/screenshots.png)
+![Oyun Ekranı](assets/screenshots.PNG)
 
 ## Gereksinimler
 
